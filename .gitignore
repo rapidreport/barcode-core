@@ -1,0 +1,12 @@
+# /
+/*.suo
+
+# /barcode/
+/barcode/bin
+/barcode/obj
+/barcode/*.user
+
+# /test/
+/test/bin
+/test/obj
+/test/*.user
