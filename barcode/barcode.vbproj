@@ -6,6 +6,9 @@
     <AssemblyName>systembase.barcode</AssemblyName>
     <Version>1.3</Version>
     <Company>systembase</Company>
+    <PackageId>jp.co.systembase.barcode</PackageId>
+    <Authors>systembase</Authors>
+    <Product>jp.co.systembase.barcode</Product>
   </PropertyGroup>
 
   <ItemGroup>
