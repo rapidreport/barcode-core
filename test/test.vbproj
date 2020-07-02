@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <RootNamespace>test</RootNamespace>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <OutputType>WinExe</OutputType>
     <StartupObject>test.FrmTest</StartupObject>
