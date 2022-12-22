@@ -89,7 +89,6 @@ Public Class FrmTest
                     b.WithText = True
                     b.ConveniFormat = True
                     b.Render(g, 450, 350, 300, 50, "(91)91234512345678901234567892110203310123456")
-                    'b.Render(g, 450, 350, 300, 50, unit, "{91}1234567890")
                 End With
                 e.HasMorePages = False
             Case Else

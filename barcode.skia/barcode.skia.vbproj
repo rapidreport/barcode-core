@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>jp.co.systembase.barcode.skia</RootNamespace>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <AssemblyName>systembase.barcode.skia</AssemblyName>
+    <Version>1.6</Version>
+    <Company>systembase</Company>
+    <PackageId>jp.co.systembase.barcode.skia</PackageId>
+    <Authors>systembase</Authors>
+    <Product>jp.co.systembase.barcode.skia</Product>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>barcode.skia.snk</AssemblyOriginatorKeyFile>
+    <AssemblyVersion>1.6</AssemblyVersion>
+    <FileVersion>1.6</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="NotoSans-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="NotoSans-Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="2.88.3" />
+  </ItemGroup>
+
+</Project>
