@@ -1,5 +1,6 @@
 ﻿Imports System.Drawing
 Imports System.Math
+Imports System.Reflection
 Imports SkiaSharp
 
 Public MustInherit Class Barcode
@@ -11,17 +12,15 @@ Public MustInherit Class Barcode
 
     Public WithText As Boolean = True
 
-    'Public Function GetFontSize(ByVal g As Graphics, ByVal txt As String, ByVal w As Single, ByVal h As Single) As Single
-    '    Dim r As Single = g.MeasureString("0", GetFont(10)).Height * 0.08
-    '    Dim ret As Single = h * 0.2F
-    '    ret = Math.Min(ret, ((w * 0.9F) / (txt.Length * r)) * 2.0F)
-    '    ret = Math.Max(ret, 6.0F)
-    '    Return ret
-    'End Function
+    Public Typeface As SKTypeface = SKTypeface.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("jp.co.systembase.barcode.skia.NotoSans-Regular.ttf"))
 
-    'Public Function GetFont(ByVal fontSize As Single) As Font
-    '    Return New Font("Arial", fontSize)
-    'End Function
+    Public Function GetFontSize(ByVal txt As String, ByVal w As Single, ByVal h As Single) As Single
+        Dim p As New SKPaint With {
+          .TextSize = 1,
+          .Typeface = Me.Typeface
+        }
+        Return Math.Max(Math.Min(h, w / p.MeasureText(txt)), h * 0.2F)
+    End Function
 
     Public Sub Render(canvas As SKCanvas, x As Single, y As Single, w As Single, h As Single, data As String)
         Render(canvas, New SKRect(x, y, x + w, y + h), data)

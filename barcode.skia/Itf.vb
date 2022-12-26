@@ -77,58 +77,59 @@ Public Class Itf
         Return cd
     End Function
 
-    Public Overrides Sub Render(canvas As SKCanvas, rect As SKRect, data As String)
-
+    Public Overrides Sub Render(canvas As SKCanvas, r As SKRect, data As String)
+        If data Is Nothing OrElse data.Length = 0 Then
+            Exit Sub
+        End If
+        Validate(data)
+        Dim w As Single = r.Width - Me.MarginX * 2
+        Dim h As Single = r.Height - Me.MarginY * 2
+        Dim _h As Single = h
+        If Me.WithText Then
+            _h *= 0.7F
+        End If
+        If w <= 0 Or h <= 0 Then
+            Exit Sub
+        End If
+        Dim _data As String = RegularizeData(data)
+        Dim txt As String = _data
+        If Me.GenerateCheckSum Then
+            _data &= Me.CalcCheckDigit(_data)
+            If Me.WithCheckSumText Then
+                txt = _data
+            End If
+        End If
+        With Nothing
+            Dim cs As List(Of Byte) = Encode(_data)
+            Dim uw As Single = w / (_data.Length * 7 + 8)
+            Dim x As Single = r.Left + MarginX
+            Dim y As Single = r.Top + MarginY
+            Dim paint As New SKPaint With {
+              .Color = SKColors.Black,
+              .Style = SKPaintStyle.Fill
+            }
+            Dim draw As Boolean = True
+            For Each c As Byte In cs
+                Dim bw As Single = uw * (c + 1)
+                If draw Then
+                    canvas.DrawRect(x, y, bw, _h, paint)
+                End If
+                x += bw
+                draw = Not draw
+            Next
+        End With
+        If Me.WithText Then
+            Dim fs = GetFontSize(txt, w, h * 0.2)
+            Dim paint As New SKPaint With {
+              .TextSize = fs,
+              .Color = SKColors.Black,
+              .Style = SKPaintStyle.Fill,
+              .IsAntialias = True,
+              .Typeface = Me.Typeface
+            }
+            canvas.DrawText(txt, r.Left + MarginX + (r.Width - paint.MeasureText(txt)) / 2, r.Top + MarginY + _h + fs * 0.8, paint)
+        End If
     End Sub
-
-    'Public Sub Render(ByVal g As Graphics,
-    '          ByVal x As Single, ByVal y As Single, ByVal w As Single, ByVal h As Single,
-    '          ByVal data As String)
-    '    Me.Render(g, New RectangleF(x, y, w, h), data)
-    'End Sub
-
-    'Public Sub Render(ByVal g As Graphics, ByVal r As RectangleF, ByVal data As String)
-    '    If data Is Nothing OrElse data.Length = 0 Then
-    '        Exit Sub
-    '    End If
-    '    Validate(data)
-    '    Dim w As Single = r.Width - Me.MarginX * 2
-    '    Dim h As Single = r.Height - Me.MarginY * 2
-    '    Dim _h As Single = h
-    '    If Me.WithText Then
-    '        _h *= 0.7F
-    '    End If
-    '    If w <= 0 Or h <= 0 Then
-    '        Exit Sub
-    '    End If
-    '    Dim _data As String = RegularizeData(data)
-    '    Dim txt As String = _data
-    '    If Me.GenerateCheckSum Then
-    '        _data &= Me.CalcCheckDigit(_data)
-    '        If Me.WithCheckSumText Then
-    '            txt = _data
-    '        End If
-    '    End If
-    '    Dim cs As List(Of Byte) = Encode(_data)
-    '    Dim uw As Single = w / (_data.Length * 7 + 8)
-    '    Dim x As Single = Me.MarginX
-    '    Dim draw As Boolean = True
-    '    For Each c As Byte In cs
-    '        Dim bw As Single = uw * (c + 1)
-    '        If draw Then
-    '            g.FillRectangle(Brushes.Black,
-    '                            New RectangleF(r.X + x, r.Y + MarginY, bw, _h))
-    '        End If
-    '        x += bw
-    '        draw = Not draw
-    '    Next
-    '    If Me.WithText Then
-    '        Dim f As Font = Me.GetFont(GetFontSize(g, txt, w, h))
-    '        Dim format As StringFormat = New StringFormat()
-    '        format.Alignment = StringAlignment.Center
-    '        g.DrawString(txt, f, Brushes.Black, r.X + w / 2 + MarginX, r.Y + _h + MarginY, format)
-    '    End If
-    'End Sub
 
 End Class
 

@@ -6,6 +6,9 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyOriginatorKeyFile>barcode.gdi.snk</AssemblyOriginatorKeyFile>
     <AssemblyName>systembase.barcode.gdi</AssemblyName>
+    <AssemblyVersion>1.7</AssemblyVersion>
+    <FileVersion>1.7</FileVersion>
+    <Version>1.7</Version>
   </PropertyGroup>
 
   <ItemGroup>

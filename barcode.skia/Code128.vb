@@ -1,4 +1,5 @@
-﻿Imports System.Drawing
+﻿Imports System.Buffers
+Imports System.Drawing
 Imports SkiaSharp
 
 Public Class Code128
@@ -268,63 +269,64 @@ Public Class Code128
         Next
         Return t Mod 103
     End Function
-    Public Overrides Sub Render(canvas As SKCanvas, rect As SKRect, data As String)
 
+    Public Overrides Sub Render(canvas As SKCanvas, r As SKRect, data As String)
+        If data Is Nothing OrElse data.Length = 0 Then
+            Exit Sub
+        End If
+        Dim w As Single = r.Width - Me.MarginX * 2
+        Dim h As Single = r.Height - Me.MarginY * 2
+        Dim _h As Single = h
+        If (Me.WithText) Then
+            _h *= 0.7F
+        End If
+        If w <= 0 Or h <= 0 Then
+            Exit Sub
+        End If
+        Me.Validate(data)
+        Me.renderBars(
+            canvas,
+            Me.GetCodePoints(data),
+            r.Top + Me.MarginX,
+            r.Left + Me.MarginY,
+            w,
+            _h)
+        If Me.WithText Then
+            Dim fs = GetFontSize(data, w, h * 0.2)
+            Dim paint As New SKPaint With {
+              .TextSize = fs,
+              .Color = SKColors.Black,
+              .Style = SKPaintStyle.Fill,
+              .IsAntialias = True,
+              .Typeface = Me.Typeface
+            }
+            canvas.DrawText(data, r.Left + MarginX + (r.Width - paint.MeasureText(data)) / 2, r.Top + MarginY + _h + fs * 0.8, paint)
+        End If
     End Sub
 
-    'Public Sub Render(ByVal g As Graphics,
-    '                  ByVal x As Single, ByVal y As Single, ByVal w As Single, ByVal h As Single,
-    '                  ByVal data As String)
-    '    Me.Render(g, New RectangleF(x, y, w, h), data)
-    'End Sub
+    Protected Sub renderBars(
+      ByVal canvas As SKCanvas,
+      ByVal codePoints As List(Of Integer),
+      ByVal x As Single,
+      ByVal y As Single,
+      ByVal w As Single,
+      ByVal h As Single)
+        Dim mw As Single = w / ((codePoints.Count + 1) * 11 + 13)
+        Dim draw As Boolean = True
+        Dim _x As Single = 0
+        Dim paint As New SKPaint With {
+          .Color = SKColors.Black,
+          .Style = SKPaintStyle.Fill
+        }
+        For Each c As Byte In Me.Encode(codePoints)
+            Dim dw As Single = c * mw
+            If draw Then
+                canvas.DrawRect(x + _x, y, dw * BarWidth, h, paint)
+            End If
+            draw = Not draw
+            _x += dw
+        Next
+    End Sub
 
-    'Public Overridable Sub Render(ByVal g As Graphics, ByVal r As RectangleF, ByVal data As String)
-    '    If data Is Nothing OrElse data.Length = 0 Then
-    '        Exit Sub
-    '    End If
-    '    Dim w As Single = r.Width - Me.MarginX * 2
-    '    Dim h As Single = r.Height - Me.MarginY * 2
-    '    Dim _h As Single = h
-    '    If (Me.WithText) Then
-    '        _h *= 0.7F
-    '    End If
-    '    If w <= 0 Or h <= 0 Then
-    '        Exit Sub
-    '    End If
-    '    Me.Validate(data)
-    '    Me.renderBars(
-    '        g,
-    '        Me.GetCodePoints(data),
-    '        r.X + Me.MarginX,
-    '        r.Y + Me.MarginY,
-    '        w,
-    '        _h)
-    '    If Me.WithText Then
-    '        Dim f As Font = Me.GetFont(GetFontSize(g, data, w, h))
-    '        Dim format As StringFormat = New StringFormat()
-    '        format.Alignment = StringAlignment.Center
-    '        g.DrawString(data, f, Brushes.Black, r.X + w / 2 + MarginX, r.Y + _h + MarginY, format)
-    '    End If
-    'End Sub
-
-    'Protected Sub renderBars(
-    '  ByVal g As Graphics,
-    '  ByVal codePoints As List(Of Integer),
-    '  ByVal x As Single,
-    '  ByVal y As Single,
-    '  ByVal w As Single,
-    '  ByVal h As Single)
-    '    Dim mw As Single = w / ((codePoints.Count + 1) * 11 + 13)
-    '    Dim draw As Boolean = True
-    '    Dim _x As Single = 0
-    '    For Each c As Byte In Me.Encode(codePoints)
-    '        Dim dw As Single = c * mw
-    '        If draw Then
-    '            g.FillRectangle(Brushes.Black, New RectangleF(x + _x, y, dw * BarWidth, h))
-    '        End If
-    '        draw = Not draw
-    '        _x += dw
-    '    Next
-    'End Sub
 
 End Class

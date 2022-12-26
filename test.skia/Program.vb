@@ -3,6 +3,7 @@ Imports SkiaSharp
 Imports jp.co.systembase.barcode.skia
 
 Module Program
+
     Sub Main(args As String())
         With Nothing
             Dim b As New Code128
@@ -60,11 +61,11 @@ Module Program
         End With
         With Nothing
             Dim b As New Yubin
-            Write(b, "1234567890-", "yubin_0", 300, 100)
-            Write(b, "1112222ABCDEFGHIJK", "yubin_1", 300, 100)
-            Write(b, "UVWXYZ", "yubin_2", 300, 100)
-            Write(b, "024007315-10-3", "yubin_3", 300, 100)
-            Write(b, "91000673-80-25J1-2B", "yubin_4", 300, 100)
+            Write(b, "1234567890-", "yubin_0", 500, 100)
+            Write(b, "1112222ABCDEFGHIJK", "yubin_1", 500, 100)
+            Write(b, "UVWXYZ", "yubin_2", 500, 100)
+            Write(b, "024007315-10-3", "yubin_3", 500, 100)
+            Write(b, "91000673-80-25J1-2B", "yubin_4", 500, 100)
         End With
         With Nothing
             Dim b As New Gs1_128

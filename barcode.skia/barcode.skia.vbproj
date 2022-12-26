@@ -4,15 +4,15 @@
     <RootNamespace>jp.co.systembase.barcode.skia</RootNamespace>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>systembase.barcode.skia</AssemblyName>
-    <Version>1.6</Version>
+    <Version>1.7</Version>
     <Company>systembase</Company>
     <PackageId>jp.co.systembase.barcode.skia</PackageId>
     <Authors>systembase</Authors>
     <Product>jp.co.systembase.barcode.skia</Product>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>barcode.skia.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>1.6</AssemblyVersion>
-    <FileVersion>1.6</FileVersion>
+    <AssemblyVersion>1.7</AssemblyVersion>
+    <FileVersion>1.7</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

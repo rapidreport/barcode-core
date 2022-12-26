@@ -128,48 +128,42 @@ Public Class Yubin
         Return pos
     End Function
 
-    Public Overrides Sub Render(canvas As SKCanvas, rect As SKRect, data As String)
-
+    Public Overrides Sub Render(canvas As SKCanvas, r As SKRect, data As String)
+        If data Is Nothing OrElse data.Length = 0 Then
+            Exit Sub
+        End If
+        Dim w As Single = r.Width - Me.MarginX * 2
+        If w <= 0 Then
+            Exit Sub
+        End If
+        Dim codes As List(Of Byte) = Me.Encode(data)
+        Dim uw As Single = w / (codes.Count * 2)
+        Dim x As Single = r.Left + Me.MarginX
+        Dim y As Single = r.Top + r.Height / 2
+        Dim paint As New SKPaint With {
+          .Color = SKColors.Black,
+          .Style = SKPaintStyle.Fill
+        }
+        For Each c As Byte In codes
+            Dim by As Single = 0
+            Dim bh As Single = 0
+            Select Case c
+                Case 1
+                    by = y - uw * 3
+                    bh = uw * 6
+                Case 2
+                    by = y - uw * 3
+                    bh = uw * 4
+                Case 3
+                    by = y - uw
+                    bh = uw * 4
+                Case 4
+                    by = y - uw
+                    bh = uw * 2
+            End Select
+            canvas.DrawRect(x, by, uw * BarWidth, bh, paint)
+            x += uw * 2
+        Next
     End Sub
-
-    'Public Sub Render(ByVal g As Graphics,
-    '          ByVal x As Single, ByVal y As Single, ByVal w As Single, ByVal h As Single,
-    '          ByVal data As String)
-    '    Me.Render(g, New RectangleF(x, y, w, h), data)
-    'End Sub
-
-    'Public Sub Render(ByVal g As Graphics, ByVal r As RectangleF, ByVal data As String)
-    '    If data Is Nothing OrElse data.Length = 0 Then
-    '        Exit Sub
-    '    End If
-    '    Dim w As Single = r.Width - Me.MarginX * 2
-    '    If w <= 0 Then
-    '        Exit Sub
-    '    End If
-    '    Dim codes As List(Of Byte) = Me.Encode(data)
-    '    Dim uw As Single = w / (codes.Count * 2)
-    '    Dim x As Single = r.Left + Me.MarginX
-    '    Dim y As Single = r.Top + r.Height / 2
-    '    For Each c As Byte In codes
-    '        Dim by As Single = 0
-    '        Dim bh As Single = 0
-    '        Select Case c
-    '            Case 1
-    '                by = y - uw * 3
-    '                bh = uw * 6
-    '            Case 2
-    '                by = y - uw * 3
-    '                bh = uw * 4
-    '            Case 3
-    '                by = y - uw
-    '                bh = uw * 4
-    '            Case 4
-    '                by = y - uw
-    '                bh = uw * 2
-    '        End Select
-    '        g.FillRectangle(Brushes.Black, New RectangleF(x, by, uw * BarWidth, bh))
-    '        x += uw * 2
-    '    Next
-    'End Sub
 
 End Class
