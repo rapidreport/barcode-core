@@ -1,14 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <RootNamespace>jp.co.systembase.barcode</RootNamespace>
+    <RootNamespace>jp.co.systembase.barcode.gdi</RootNamespace>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <AssemblyOriginatorKeyFile>barcode.gdi.snk</AssemblyOriginatorKeyFile>
     <AssemblyName>systembase.barcode.gdi</AssemblyName>
-    <AssemblyVersion>1.7</AssemblyVersion>
-    <FileVersion>1.7</FileVersion>
+    <PackageId>jp.co.systembase.barcode.gdi</PackageId>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>barcode.gdi.snk</AssemblyOriginatorKeyFile>
     <Version>1.7</Version>
+    <AssemblyVersion>1.7.0.0</AssemblyVersion>
+    <FileVersion>1.7.0.0</FileVersion>
+    <Authors>systembase</Authors>
+    <Company>systembase</Company>
+    <Product>jp.co.systembase.barcode.gdi</Product>
   </PropertyGroup>
 
   <ItemGroup>

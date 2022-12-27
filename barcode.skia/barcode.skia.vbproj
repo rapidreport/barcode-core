@@ -3,16 +3,17 @@
   <PropertyGroup>
     <RootNamespace>jp.co.systembase.barcode.skia</RootNamespace>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>systembase.barcode.skia</AssemblyName>
-    <Version>1.7</Version>
-    <Company>systembase</Company>
     <PackageId>jp.co.systembase.barcode.skia</PackageId>
-    <Authors>systembase</Authors>
-    <Product>jp.co.systembase.barcode.skia</Product>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>barcode.skia.snk</AssemblyOriginatorKeyFile>
-    <AssemblyVersion>1.7</AssemblyVersion>
-    <FileVersion>1.7</FileVersion>
+    <Version>1.7</Version>
+    <AssemblyVersion>1.7.0.0</AssemblyVersion>
+    <FileVersion>1.7.0.0</FileVersion>
+    <Authors>systembase</Authors>
+    <Company>systembase</Company>
+    <Product>jp.co.systembase.barcode.skia</Product>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,18 +1,18 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
-Imports jp.co.systembase.barcode
+Imports jp.co.systembase.barcode.gdi
 
-Public Class FrmTest
+Friend Module Program
 
-    Private WithEvents pd As New System.Drawing.Printing.PrintDocument
-
-    Private page As Integer = 1
-
-    Private Sub FrmTest_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+    <STAThread()>
+    Friend Sub Main(args As String())
         Dim ppd As New PrintPreviewDialog
         ppd.Document = pd
         ppd.ShowDialog()
     End Sub
+
+    Private WithEvents pd As New System.Drawing.Printing.PrintDocument
+    Private page As Integer = 1
 
     Private Sub pd_PrintPage(ByVal sender As Object, ByVal e As System.Drawing.Printing.PrintPageEventArgs) Handles pd.PrintPage
         Dim g As Graphics = e.Graphics
@@ -101,4 +101,4 @@ Public Class FrmTest
         End If
     End Sub
 
-End Class
+End Module

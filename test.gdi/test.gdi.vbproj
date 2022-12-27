@@ -5,28 +5,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWindowsForms>True</UseWindowsForms>
     <OutputType>WinExe</OutputType>
-    <StartupObject>test.FrmTest</StartupObject>
-    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+    <StartupObject>Sub Main</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
+    <AdditionalFiles Remove="My Project\app.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\barcode.gdi\barcode.gdi.vbproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="My Project\Settings.Designer.vb">
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="My Project\Settings.settings">
-      <CustomToolNamespace>My</CustomToolNamespace>
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
-    </None>
   </ItemGroup>
 
 </Project>
