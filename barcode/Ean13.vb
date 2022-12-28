@@ -1,4 +1,6 @@
-﻿Imports System.Drawing
+﻿Imports System.Buffers
+Imports System.Drawing
+Imports System.Net.Mime.MediaTypeNames
 
 Public Class Ean13
     Inherits Ean
@@ -47,59 +49,52 @@ Public Class Ean13
         Return ret
     End Function
 
-    Public Sub Render(ByVal g As Graphics,
-                  ByVal x As Single, ByVal y As Single, ByVal w As Single, ByVal h As Single,
-                  ByVal data As String)
-        Me.Render(g, New RectangleF(x, y, w, h), data)
-    End Sub
-
-    Public Sub Render(ByVal g As Graphics, ByVal r As RectangleF, ByVal data As String)
+    Public Overrides Function CreateShape(x As Single, y As Single, w As Single, h As Single, data As String) As Shape
         If data Is Nothing OrElse data.Length = 0 Then
-            Exit Sub
+            Return Nothing
         End If
-        Dim w As Single = r.Width - Me.MarginX * 2
-        Dim h As Single = r.Height - Me.MarginY * 2
-        Dim _h1 As Single = h
-        Dim _h2 As Single = h
+        Dim _w As Single = w - Me.MarginX * 2
+        Dim _h As Single = h - Me.MarginY * 2
+        Dim __h1 As Single = _h
+        Dim __h2 As Single = _h
         If Me.WithText Then
-            _h1 *= 0.7F
-            _h2 *= 0.8F
+            __h1 *= 0.7F
+            __h2 *= 0.8F
         End If
-        If w <= 0 Or h <= 0 Then
-            Exit Sub
+        If _w <= 0 Or _h <= 0 Then
+            Return Nothing
         End If
+        Dim ret As New Shape()
         Dim _data As List(Of Byte) = Me.PreprocessData(data)
-        Dim cs() As Byte = Me.Encode(_data)
         Dim mw As Single
-        Dim x As Single
-        If Me.WithText Then
-            mw = w / (12 * 7 + 18)
-            x = Me.MarginX + mw * 7
-        Else
-            mw = w / (12 * 7 + 11)
-            x = Me.MarginX
-        End If
-        Dim draw As Boolean = True
-        For i As Integer = 0 To cs.Length - 1
-            Dim dw As Single = cs(i) * mw
-            If draw Then
-                Dim __h As Single = _h1
-                If Array.IndexOf(GUARDS, i) >= 0 Then
-                    __h = _h2
-                End If
-                g.FillRectangle(Brushes.Black, New RectangleF(r.X + x, r.Y + MarginY, dw * BarWidth, __h))
+        With Nothing
+            Dim cs() As Byte = Me.Encode(_data)
+            Dim _x As Single
+            If Me.WithText Then
+                mw = _w / (12 * 7 + 18)
+                _x = x + MarginX + mw * 7
+            Else
+                mw = _w / (12 * 7 + 11)
+                _x = x + MarginX
             End If
-            draw = Not draw
-            x += dw
-        Next
+            Dim _y As Single = y + MarginY
+            Dim draw As Boolean = True
+            For i As Integer = 0 To cs.Length - 1
+                Dim dw As Single = cs(i) * mw
+                If draw Then
+                    ret.Bars.Add(New Shape.Bar(_x, _y, dw * BarWidth, IIf(GUARDS.Contains(i), __h2, __h1)))
+                End If
+                draw = Not draw
+                _x += dw
+            Next
+        End With
         If Me.WithText Then
-            Dim f As Font = Me.GetFont(GetFontSize(g, "0000000000000", w, h))
-            Dim format As StringFormat = New StringFormat()
-            format.Alignment = StringAlignment.Center
+            ret.FontSize = GetFontSize("0000000000000", _w, _h * 0.25)
             For i As Integer = 0 To 12
-                g.DrawString(_data(i), f, Brushes.Black, r.X + CHARPOS(i) * mw + MarginX, r.Y + _h1 + MarginY, format)
+                ret.Texts.Add(New Shape.Text(_data(i), x + MarginX + CHARPOS(i) * mw - ret.FontSize / 2, y + MarginY + __h1))
             Next
         End If
-    End Sub
+        Return ret
+    End Function
 
 End Class

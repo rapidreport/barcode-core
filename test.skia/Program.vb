@@ -1,6 +1,7 @@
 Imports System.IO
 Imports SkiaSharp
-Imports jp.co.systembase.barcode.skia
+Imports jp.co.systembase.barcode
+Imports System.Reflection
 
 Module Program
 
@@ -84,12 +85,40 @@ Module Program
         With Nothing
             Using bmp As New SKBitmap(w + MARGIN * 2, h + MARGIN * 2)
                 Using canvas As New SKCanvas(bmp)
-                    Dim paint As New SKPaint With {
-                        .Color = SKColors.White,
-                        .Style = SKPaintStyle.Fill
-                    }
-                    canvas.DrawRect(0, 0, w + MARGIN * 2, h + MARGIN * 2, paint)
-                    barcode.Render(canvas, MARGIN, MARGIN, w, h, data)
+                    canvas.DrawRect(0, 0, w + MARGIN * 2, h + MARGIN * 2, New SKPaint With {
+                          .Color = SKColors.White,
+                          .Style = SKPaintStyle.Fill
+                    })
+                    Dim shape = barcode.CreateShape(MARGIN, MARGIN, w, h, data)
+                    If shape IsNot Nothing Then
+                        With Nothing
+                            Dim paint = New SKPaint With {
+                              .Color = SKColors.Black,
+                              .Style = SKPaintStyle.Fill
+                            }
+                            For Each b In shape.Bars
+                                canvas.DrawRect(b.X, b.Y, b.W, b.H, paint)
+                            Next
+                        End With
+                        If shape.Texts.Count Then
+                            Dim paint As New SKPaint With {
+                              .TextSize = shape.FontSize * 0.8,
+                              .Color = SKColors.Black,
+                              .Style = SKPaintStyle.Fill,
+                              .IsAntialias = True,
+                              .Typeface = SKTypeface.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("test.skia.NotoSans-Regular.ttf"))
+                            }
+                            For Each t In shape.Texts
+                                Dim x As Single = t.X
+                                If t.W > 0 Then
+                                    x += (t.W - paint.MeasureText(t.Text)) / 2
+                                Else
+                                    x += shape.FontSize * 0.25
+                                End If
+                                canvas.DrawText(t.Text, x, t.Y + shape.FontSize * 0.8, paint)
+                            Next
+                        End If
+                    End If
                 End Using
                 File.WriteAllBytes(Path.Combine("out", fileName & ".png"),
                     SKImage.FromBitmap(bmp).Encode(SKEncodedImageFormat.Png, 100).ToArray())

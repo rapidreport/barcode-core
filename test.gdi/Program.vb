@@ -1,6 +1,6 @@
 ﻿Imports System.Drawing
 Imports System.Windows.Forms
-Imports jp.co.systembase.barcode.gdi
+Imports jp.co.systembase.barcode
 
 Friend Module Program
 
@@ -16,79 +16,80 @@ Friend Module Program
 
     Private Sub pd_PrintPage(ByVal sender As Object, ByVal e As System.Drawing.Printing.PrintPageEventArgs) Handles pd.PrintPage
         Dim g As Graphics = e.Graphics
+        g.PageUnit = GraphicsUnit.Point
         Select Case page
             Case 1
                 With Nothing
                     Dim b As New Code128
-                    b.Render(g, 20, 50, 200, 50, "0123456789CODE")
-                    b.Render(g, 20, 150, 200, 50, "!@#$%^&*()-")
-                    b.Render(g, 20, 250, 200, 50, "[]{};':""")
+                    Render(g, b.CreateShape(20, 30, 150, 40, "0123456789CODE"))
+                    Render(g, b.CreateShape(20, 100, 150, 40, "!@#$%^&*()-"))
+                    Render(g, b.CreateShape(20, 170, 150, 40, "[]{};':"""))
                     b.WithText = False
-                    b.Render(g, 20, 350, 200, 50, "abcd12!")
+                    Render(g, b.CreateShape(20, 230, 150, 40, "abcd12!"))
                 End With
                 With Nothing
                     Dim b As New Ean8
-                    b.Render(g, 300, 50, 100, 50, "4901234")
-                    b.Render(g, 300, 150, 100, 50, "5678901")
-                    b.Render(g, 300, 250, 100, 50, "5678901")
+                    Render(g, b.CreateShape(220, 30, 150, 40, "4901234"))
+                    Render(g, b.CreateShape(220, 100, 150, 40, "5678901"))
+                    Render(g, b.CreateShape(220, 170, 150, 40, "5678901"))
                     b.WithText = False
-                    b.Render(g, 300, 350, 100, 50, "8888888")
+                    Render(g, b.CreateShape(220, 230, 150, 40, "8888888"))
                 End With
                 With Nothing
                     Dim b As New Ean13
-                    b.Render(g, 500, 50, 150, 50, "490123456789")
-                    b.Render(g, 500, 150, 150, 50, "192205502800")
-                    b.Render(g, 500, 250, 150, 50, "978488337649")
+                    Render(g, b.CreateShape(420, 30, 150, 40, "490123456789"))
+                    Render(g, b.CreateShape(420, 100, 150, 40, "192205502800"))
+                    Render(g, b.CreateShape(420, 170, 150, 40, "978488337649"))
                     b.WithText = False
-                    b.Render(g, 500, 350, 150, 50, "390123456789")
+                    Render(g, b.CreateShape(420, 230, 150, 40, "390123456789"))
                 End With
                 With Nothing
                     Dim b As New Code39
-                    b.Render(g, 20, 500, 200, 50, "0123456789")
-                    b.Render(g, 20, 600, 200, 50, "ABCDEFGHIJ")
+                    Render(g, b.CreateShape(20, 330, 150, 40, "0123456789"))
+                    Render(g, b.CreateShape(20, 400, 150, 40, "ABCDEFGHIJ"))
                     b.GenerateCheckSum = True
-                    b.Render(g, 20, 700, 200, 50, "KLMNOPQRSTU")
+                    Render(g, b.CreateShape(20, 470, 150, 40, "KLMNOPQRSTU"))
                     b.WithText = False
-                    b.Render(g, 20, 800, 200, 50, "VWXYZ-. $/+%")
+                    Render(g, b.CreateShape(20, 530, 150, 40, "VWXYZ-. $/+%"))
                 End With
                 With Nothing
                     Dim b As New Codabar
-                    b.Render(g, 300, 500, 150, 50, "A123456A")
-                    b.Render(g, 300, 600, 150, 50, "B987653B")
+                    Render(g, b.CreateShape(220, 330, 150, 40, "A123456A"))
+                    Render(g, b.CreateShape(220, 400, 150, 40, "B987653B"))
                     b.GenerateCheckSum = True
-                    b.Render(g, 300, 700, 150, 50, "C82-$:/.+34C")
+                    Render(g, b.CreateShape(220, 470, 150, 40, "C82-$:/.+34C"))
                     b.WithText = False
-                    b.Render(g, 300, 800, 150, 50, "D98-$:/.+21D")
+                    Render(g, b.CreateShape(220, 530, 150, 40, "D98-$:/.+21D"))
                 End With
                 With Nothing
                     Dim b As New Itf
-                    b.Render(g, 500, 500, 200, 50, "12345678901234")
+                    Render(g, b.CreateShape(420, 330, 150, 40, "12345678901234"))
                     b.GenerateCheckSum = True
-                    b.Render(g, 500, 600, 200, 50, "432109876543")
+                    Render(g, b.CreateShape(420, 400, 150, 40, "432109876543"))
                     b.WithCheckSumText = True
-                    b.Render(g, 500, 700, 200, 50, "1234567890123")
+                    Render(g, b.CreateShape(420, 470, 150, 40, "1234567890123"))
                     b.WithText = False
-                    b.Render(g, 500, 800, 200, 50, "1234567890123")
+                    Render(g, b.CreateShape(420, 530, 150, 40, "1234567890123"))
                 End With
                 e.HasMorePages = True
             Case 2
                 With Nothing
                     Dim b As New Yubin
-                    b.Render(g, 20, 50, 300, 50, "1234567890-")
-                    b.Render(g, 20, 150, 300, 50, "1112222ABCDEFGHIJK")
-                    b.Render(g, 20, 250, 300, 50, "UVWXYZ")
-                    b.Render(g, 20, 350, 300, 50, "024007315-10-3")
-                    b.Render(g, 20, 450, 300, 50, "91000673-80-25J1-2B")
+                    Render(g, b.CreateShape(20, 30, 300, 40, "1234567890-"))
+                    Render(g, b.CreateShape(20, 130, 300, 40, "1112222ABCDEFGHIJK"))
+                    Render(g, b.CreateShape(20, 230, 300, 40, "UVWXYZ"))
+                    Render(g, b.CreateShape(20, 330, 300, 40, "024007315-10-3"))
+                    Render(g, b.CreateShape(20, 430, 300, 40, "91000673-80-25J1-2B"))
                 End With
                 With Nothing
                     Dim b As New Gs1_128
-                    b.Render(g, 450, 50, 300, 50, "(00)123456789012345678")
-                    b.Render(g, 450, 150, 300, 50, "(11)ABCDEF{99}!""%&'()*+,-./")
+                    Render(g, b.CreateShape(350, 30, 200, 40, "(00)123456789012345678"))
+                    Render(g, b.CreateShape(350, 130, 200, 40, "(11)ABCDEF{99}!""%&'()*+,-./"))
                     b.WithText = False
-                    b.Render(g, 450, 250, 300, 50, "(01)04912345123459{10}ABC123")
+                    Render(g, b.CreateShape(350, 230, 200, 40, "(01)04912345123459{10}ABC123"))
                     b.WithText = True
                     b.ConveniFormat = True
-                    b.Render(g, 450, 350, 300, 50, "(91)91234512345678901234567892110203310123456")
+                    Render(g, b.CreateShape(350, 330, 200, 40, "(91)91234512345678901234567892110203310123456"))
                 End With
                 e.HasMorePages = False
             Case Else
@@ -99,6 +100,28 @@ Friend Module Program
         Else
             page = 1
         End If
+    End Sub
+
+    Private Sub Render(g As Graphics, shape As Barcode.Shape)
+        If shape Is Nothing Then
+            Exit Sub
+        End If
+        For Each bar In shape.Bars
+            g.FillRectangle(Brushes.Black, bar.X, bar.Y, bar.W, bar.H)
+        Next
+        If shape.Texts.Count > 0 Then
+            Dim f As New Font("Arial", shape.FontSize)
+            For Each t In shape.Texts
+                If t.W > 0 Then
+                    g.DrawString(t.Text, f, Brushes.Black,
+                                 New RectangleF(t.X, t.Y, t.W, t.H),
+                                 New StringFormat With {.Alignment = StringAlignment.Center})
+                Else
+                    g.DrawString(t.Text, f, Brushes.Black, t.X, t.Y)
+                End If
+            Next
+        End If
+
     End Sub
 
 End Module

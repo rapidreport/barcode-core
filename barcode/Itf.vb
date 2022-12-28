@@ -76,26 +76,21 @@ Public Class Itf
         Return cd
     End Function
 
-    Public Sub Render(ByVal g As Graphics,
-              ByVal x As Single, ByVal y As Single, ByVal w As Single, ByVal h As Single,
-              ByVal data As String)
-        Me.Render(g, New RectangleF(x, y, w, h), data)
-    End Sub
-
-    Public Sub Render(ByVal g As Graphics, ByVal r As RectangleF, ByVal data As String)
+    Public Overrides Function CreateShape(x As Single, y As Single, w As Single, h As Single, data As String) As Shape
         If data Is Nothing OrElse data.Length = 0 Then
-            Exit Sub
+            Return Nothing
         End If
         Validate(data)
-        Dim w As Single = r.Width - Me.MarginX * 2
-        Dim h As Single = r.Height - Me.MarginY * 2
-        Dim _h As Single = h
+        Dim _w As Single = w - Me.MarginX * 2
+        Dim _h As Single = h - Me.MarginY * 2
+        Dim __h As Single = _h
         If Me.WithText Then
-            _h *= 0.7F
+            __h *= 0.7F
         End If
-        If w <= 0 Or h <= 0 Then
-            Exit Sub
+        If _w <= 0 Or _h <= 0 Then
+            Return Nothing
         End If
+        Dim ret As New Shape
         Dim _data As String = RegularizeData(data)
         Dim txt As String = _data
         If Me.GenerateCheckSum Then
@@ -104,26 +99,28 @@ Public Class Itf
                 txt = _data
             End If
         End If
-        Dim cs As List(Of Byte) = Encode(_data)
-        Dim uw As Single = w / (_data.Length * 7 + 8)
-        Dim x As Single = Me.MarginX
-        Dim draw As Boolean = True
-        For Each c As Byte In cs
-            Dim bw As Single = uw * (c + 1)
-            If draw Then
-                g.FillRectangle(Brushes.Black,
-                                New RectangleF(r.X + x, r.Y + MarginY, bw, _h))
-            End If
-            x += bw
-            draw = Not draw
-        Next
+        With Nothing
+            Dim cs As List(Of Byte) = Encode(_data)
+            Dim uw As Single = w / (_data.Length * 7 + 8)
+            Dim _x As Single = x + MarginX
+            Dim _y As Single = y + MarginY
+            Dim draw As Boolean = True
+            For Each c As Byte In cs
+                Dim bw As Single = uw * (c + 1)
+                If draw Then
+                    ret.Bars.Add(New Shape.Bar(_x, _y, bw * BarWidth, __h))
+                End If
+                draw = Not draw
+                _x += bw
+            Next
+        End With
         If Me.WithText Then
-            Dim f As Font = Me.GetFont(GetFontSize(g, txt, w, h))
-            Dim format As StringFormat = New StringFormat()
-            format.Alignment = StringAlignment.Center
-            g.DrawString(txt, f, Brushes.Black, r.X + w / 2 + MarginX, r.Y + _h + MarginY, format)
+            ret.FontSize = GetFontSize(txt, _w, _h * 0.25)
+            ret.Texts.Add(New Shape.Text(txt, x + MarginX, y + MarginY + __h, _w, _h))
         End If
-    End Sub
+        Return ret
+    End Function
+
 
 End Class
 

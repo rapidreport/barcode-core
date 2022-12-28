@@ -1,6 +1,4 @@
-﻿Imports System.Drawing
-
-Public Class Yubin
+﻿Public Class Yubin
     Inherits Barcode
 
     Private Shared CODE_PATTERNS(,) As Byte =
@@ -127,44 +125,40 @@ Public Class Yubin
         Return pos
     End Function
 
-    Public Sub Render(ByVal g As Graphics,
-              ByVal x As Single, ByVal y As Single, ByVal w As Single, ByVal h As Single,
-              ByVal data As String)
-        Me.Render(g, New RectangleF(x, y, w, h), data)
-    End Sub
-
-    Public Sub Render(ByVal g As Graphics, ByVal r As RectangleF, ByVal data As String)
+    Public Overrides Function CreateShape(x As Single, y As Single, w As Single, h As Single, data As String) As Shape
         If data Is Nothing OrElse data.Length = 0 Then
-            Exit Sub
+            Return Nothing
         End If
-        Dim w As Single = r.Width - Me.MarginX * 2
-        If w <= 0 Then
-            Exit Sub
+        Dim _w As Single = w - Me.MarginX * 2
+        If _w <= 0 Then
+            Return Nothing
         End If
+        Dim ret As New Shape
         Dim codes As List(Of Byte) = Me.Encode(data)
         Dim uw As Single = w / (codes.Count * 2)
-        Dim x As Single = r.Left + Me.MarginX
-        Dim y As Single = r.Top + r.Height / 2
+        Dim _x As Single = x + Me.MarginX
+        Dim _y As Single = y + h / 2
         For Each c As Byte In codes
             Dim by As Single = 0
             Dim bh As Single = 0
             Select Case c
                 Case 1
-                    by = y - uw * 3
+                    by = _y - uw * 3
                     bh = uw * 6
                 Case 2
-                    by = y - uw * 3
+                    by = _y - uw * 3
                     bh = uw * 4
                 Case 3
-                    by = y - uw
+                    by = _y - uw
                     bh = uw * 4
                 Case 4
-                    by = y - uw
+                    by = _y - uw
                     bh = uw * 2
             End Select
-            g.FillRectangle(Brushes.Black, New RectangleF(x, by, uw * BarWidth, bh))
-            x += uw * 2
+            ret.Bars.Add(New Shape.Bar(_x, by, uw * BarWidth, bh))
+            _x += uw * 2
         Next
-    End Sub
+        Return ret
+    End Function
 
 End Class

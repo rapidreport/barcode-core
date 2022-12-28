@@ -1,4 +1,5 @@
 ﻿Imports System.Drawing
+Imports System.Net.NetworkInformation
 Imports System.Text
 Imports System.Text.RegularExpressions
 
@@ -9,55 +10,6 @@ Public Class Gs1_128
 
     Public Sub New()
         Me.ParseFnc1 = True
-    End Sub
-
-    Public Overrides Sub Render(ByVal g As System.Drawing.Graphics, ByVal r As RectangleF, ByVal data As String)
-        If data Is Nothing OrElse data.Length = 0 Then
-            Exit Sub
-        End If
-        Dim w As Single = r.Width - Me.MarginX * 2
-        Dim h As Single = r.Height - Me.MarginY * 2
-        Dim _h As Single = h
-        If Me.WithText Then
-            If Me.ConveniFormat Then
-                _h *= 0.5F
-            Else
-                _h *= 0.7F
-            End If
-        End If
-        If w <= 0 Or h <= 0 Then
-            Exit Sub
-        End If
-        Dim _data As String = data
-        Me.Validate(_data)
-        If Me.ConveniFormat Then
-            _data = Me.PreprocessConveniData(_data)
-        End If
-        Me.renderBars( _
-            g, _
-            Me.GetCodePoints(Me.TrimData(_data), ECodeType.C), _
-            r.X + Me.MarginX, _
-            r.Y + Me.MarginY, _
-            w, _
-            _h)
-        If Me.WithText Then
-            If Me.ConveniFormat Then
-                Dim t As String = Me.ConveniDisplayFormat(_data)
-                Dim t1 As String = t.Substring(0, 33)
-                Dim t2 As String = t.Substring(33)
-                Dim f As Font = Me.GetFont(GetFontSize(g, t1, w, h))
-                Dim format As StringFormat = New StringFormat()
-                format.Alignment = StringAlignment.Near
-                g.DrawString(t1, f, Brushes.Black, r.X + Me.MarginX, r.Y + _h + Me.MarginY - f.Size * 0.1, format)
-                g.DrawString(t2, f, Brushes.Black, r.X + Me.MarginX, r.Y + _h + Me.MarginY + f.Size, format)
-            Else
-                Dim t As String = Me.DisplayFormat(_data)
-                Dim f As Font = Me.GetFont(GetFontSize(g, t, w, h))
-                Dim format As StringFormat = New StringFormat()
-                format.Alignment = StringAlignment.Center
-                g.DrawString(t, f, Brushes.Black, r.X + w / 2 + Me.MarginX, r.Y + _h + Me.MarginY, format)
-            End If
-        End If
     End Sub
 
     Public Function PreprocessConveniData(ByVal data As String) As String
@@ -113,6 +65,62 @@ Public Class Gs1_128
             End If
         Next
         Return (10 - (s Mod 10)) Mod 10
+    End Function
+
+    Public Overrides Function CreateShape(x As Single, y As Single, w As Single, h As Single, data As String) As Shape
+        If data Is Nothing OrElse data.Length = 0 Then
+            Return Nothing
+        End If
+        Dim _w As Single = w - Me.MarginX * 2
+        Dim _h As Single = h - Me.MarginY * 2
+        Dim __h As Single = _h
+        If Me.WithText Then
+            If Me.ConveniFormat Then
+                __h *= 0.5F
+            Else
+                __h *= 0.7F
+            End If
+        End If
+        If _w <= 0 Or _h <= 0 Then
+            Return Nothing
+        End If
+        Dim ret As New Shape
+        Dim _data As String = data
+        Me.Validate(_data)
+        If Me.ConveniFormat Then
+            _data = Me.PreprocessConveniData(_data)
+        End If
+        With Nothing
+            Dim cps = GetCodePoints(Me.TrimData(_data), ECodeType.C)
+            Dim mw As Single = w / ((cps.Count + 1) * 11 + 13)
+            Dim draw As Boolean = True
+            Dim _x As Single = x + MarginX
+            Dim _y As Single = y + MarginY
+            For Each c As Byte In Me.Encode(cps)
+                Dim dw As Single = c * mw
+                If draw Then
+                    ret.Bars.Add(New Shape.Bar(_x, _y, dw * BarWidth, __h))
+                End If
+                draw = Not draw
+                _x += dw
+            Next
+        End With
+        If Me.WithText Then
+
+            If Me.ConveniFormat Then
+                Dim t As String = Me.ConveniDisplayFormat(_data)
+                Dim t1 As String = t.Substring(0, 33)
+                Dim t2 As String = t.Substring(33)
+                ret.FontSize = GetFontSize(t1, w, h * 0.25)
+                ret.Texts.Add(New Shape.Text(t1, x + MarginX, y + MarginY + __h))
+                ret.Texts.Add(New Shape.Text(t2, x + MarginX, y + MarginY + __h + ret.FontSize))
+            Else
+                Dim t As String = Me.DisplayFormat(_data)
+                ret.FontSize = GetFontSize(t, w, h * 0.25)
+                ret.Texts.Add(New Shape.Text(t, x + MarginX, y + MarginY + __h, _w, _h))
+            End If
+        End If
+        Return ret
     End Function
 
 End Class

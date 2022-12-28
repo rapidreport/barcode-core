@@ -1,4 +1,6 @@
-﻿Imports System.Drawing
+﻿Imports System.Buffers
+Imports System.Drawing
+Imports System.Net.Mime.MediaTypeNames
 
 Public Class Code128
     Inherits Barcode
@@ -268,59 +270,41 @@ Public Class Code128
         Return t Mod 103
     End Function
 
-    Public Sub Render(ByVal g As Graphics,
-                      ByVal x As Single, ByVal y As Single, ByVal w As Single, ByVal h As Single,
-                      ByVal data As String)
-        Me.Render(g, New RectangleF(x, y, w, h), data)
-    End Sub
-
-    Public Overridable Sub Render(ByVal g As Graphics, ByVal r As RectangleF, ByVal data As String)
+    Public Overrides Function CreateShape(x As Single, y As Single, w As Single, h As Single, data As String) As Shape
         If data Is Nothing OrElse data.Length = 0 Then
-            Exit Sub
+            Return Nothing
         End If
-        Dim w As Single = r.Width - Me.MarginX * 2
-        Dim h As Single = r.Height - Me.MarginY * 2
-        Dim _h As Single = h
+        Dim _w As Single = w - Me.MarginX * 2
+        Dim _h As Single = h - Me.MarginY * 2
+        Dim __h As Single = _h
         If (Me.WithText) Then
-            _h *= 0.7F
+            __h *= 0.7F
         End If
-        If w <= 0 Or h <= 0 Then
-            Exit Sub
+        If _w <= 0 Or _h <= 0 Then
+            Return Nothing
         End If
         Me.Validate(data)
-        Me.renderBars(
-            g,
-            Me.GetCodePoints(data),
-            r.X + Me.MarginX,
-            r.Y + Me.MarginY,
-            w,
-            _h)
+        Dim ret As New Shape()
+        With Nothing
+            Dim cps = GetCodePoints(data)
+            Dim mw As Single = w / ((cps.Count + 1) * 11 + 13)
+            Dim draw As Boolean = True
+            Dim _x As Single = x + MarginX
+            Dim _y As Single = y + MarginY
+            For Each c As Byte In Me.Encode(cps)
+                Dim dw As Single = c * mw
+                If draw Then
+                    ret.Bars.Add(New Shape.Bar(_x, _y, dw * BarWidth, __h))
+                End If
+                draw = Not draw
+                _x += dw
+            Next
+        End With
         If Me.WithText Then
-            Dim f As Font = Me.GetFont(GetFontSize(g, data, w, h))
-            Dim format As StringFormat = New StringFormat()
-            format.Alignment = StringAlignment.Center
-            g.DrawString(data, f, Brushes.Black, r.X + w / 2 + MarginX, r.Y + _h + MarginY, format)
+            ret.FontSize = GetFontSize(data, _w, _h * 0.25)
+            ret.Texts.Add(New Shape.Text(data, x + MarginX, y + MarginY + __h, _w, _h))
         End If
-    End Sub
-
-    Protected Sub renderBars(
-      ByVal g As Graphics,
-      ByVal codePoints As List(Of Integer),
-      ByVal x As Single,
-      ByVal y As Single,
-      ByVal w As Single,
-      ByVal h As Single)
-        Dim mw As Single = w / ((codePoints.Count + 1) * 11 + 13)
-        Dim draw As Boolean = True
-        Dim _x As Single = 0
-        For Each c As Byte In Me.Encode(codePoints)
-            Dim dw As Single = c * mw
-            If draw Then
-                g.FillRectangle(Brushes.Black, New RectangleF(x + _x, y, dw * BarWidth, h))
-            End If
-            draw = Not draw
-            _x += dw
-        Next
-    End Sub
+        Return ret
+    End Function
 
 End Class

@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "barcode", "barcode\barcode.vbproj", "{E98A4A61-C73D-4A68-B4AF-95C91190E700}"
+EndProject
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "test.gdi", "test.gdi\test.gdi.vbproj", "{DEBA71D1-5B0A-42D8-9282-E9A6C68C411F}"
 EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "barcode.skia", "barcode.skia\barcode.skia.vbproj", "{E98A4A61-C73D-4A68-B4AF-95C91190E700}"
-EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "test.skia", "test.skia\test.skia.vbproj", "{76CCD4B5-712F-450C-BF43-973491EA8932}"
-EndProject
-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "barcode.gdi", "barcode.gdi\barcode.gdi.vbproj", "{BFA255D5-0BE7-4DDF-8986-4C860EE78667}"
+Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "test.skia", "test.skia\test.skia.vbproj", "{05B652F2-D3E3-4115-B4A4-1CAB1BA2F0CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +23,10 @@ Global
 		{E98A4A61-C73D-4A68-B4AF-95C91190E700}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E98A4A61-C73D-4A68-B4AF-95C91190E700}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E98A4A61-C73D-4A68-B4AF-95C91190E700}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76CCD4B5-712F-450C-BF43-973491EA8932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76CCD4B5-712F-450C-BF43-973491EA8932}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76CCD4B5-712F-450C-BF43-973491EA8932}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76CCD4B5-712F-450C-BF43-973491EA8932}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BFA255D5-0BE7-4DDF-8986-4C860EE78667}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFA255D5-0BE7-4DDF-8986-4C860EE78667}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFA255D5-0BE7-4DDF-8986-4C860EE78667}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BFA255D5-0BE7-4DDF-8986-4C860EE78667}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05B652F2-D3E3-4115-B4A4-1CAB1BA2F0CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05B652F2-D3E3-4115-B4A4-1CAB1BA2F0CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05B652F2-D3E3-4115-B4A4-1CAB1BA2F0CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05B652F2-D3E3-4115-B4A4-1CAB1BA2F0CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

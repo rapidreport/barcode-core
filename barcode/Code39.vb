@@ -1,6 +1,5 @@
 ﻿Imports System.Drawing
 Imports System.Net.NetworkInformation
-Imports SkiaSharp
 
 Public Class Code39
     Inherits Barcode
@@ -109,19 +108,20 @@ Public Class Code39
         l.Add(CODE_PATTERNS(p, 8))
     End Sub
 
-    Public Overrides Sub Render(canvas As SKCanvas, r As SKRect, data As String)
+    Public Overrides Function CreateShape(x As Single, y As Single, w As Single, h As Single, data As String) As Shape
         If data Is Nothing OrElse data.Length = 0 Then
-            Exit Sub
+            Return Nothing
         End If
-        Dim w As Single = r.Width - Me.MarginX * 2
-        Dim h As Single = r.Height - Me.MarginY * 2
-        Dim _h As Single = h
+        Dim _w As Single = w - Me.MarginX * 2
+        Dim _h As Single = h - Me.MarginY * 2
+        Dim __h As Single = _h
         If Me.WithText Then
-            _h *= 0.7F
+            __h *= 0.7F
         End If
-        If w <= 0 Or h <= 0 Then
-            Exit Sub
+        If _w <= 0 Or _h <= 0 Then
+            Return Nothing
         End If
+        Dim ret As New Shape
         Dim ps As New List(Of Integer)
         Dim txt As String = data
         With Nothing
@@ -142,32 +142,22 @@ Public Class Code39
             Dim cs As Byte() = Me.Encode(ps)
             Dim mw As Single = w / (ps.Count * 13 - 1)
             Dim draw As Boolean = True
-            Dim x As Single = r.Left + Me.MarginX
-            Dim y As Single = r.Top + Me.MarginY
-            Dim paint As New SKPaint With {
-              .Color = SKColors.Black,
-              .Style = SKPaintStyle.Fill
-            }
+            Dim _x As Single = x + Me.MarginX
+            Dim _y As Single = y + Me.MarginY
             For i As Integer = 0 To cs.Length - 1
                 Dim dw As Single = (cs(i) + 1) * mw
                 If draw Then
-                    canvas.DrawRect(x, y, dw * BarWidth, _h, paint)
+                    ret.Bars.Add(New Shape.Bar(_x, _y, dw * BarWidth, __h))
                 End If
                 draw = Not draw
-                x += dw
+                _x += dw
             Next
         End With
         If Me.WithText Then
-            Dim fs = GetFontSize(txt, w, h * 0.2)
-            Dim paint As New SKPaint With {
-              .TextSize = fs,
-              .Color = SKColors.Black,
-              .Style = SKPaintStyle.Fill,
-              .IsAntialias = True,
-              .Typeface = Me.Typeface
-            }
-            canvas.DrawText(txt, r.Left + MarginX + (r.Width - paint.MeasureText(txt)) / 2, r.Top + MarginY + _h + fs * 0.8, paint)
+            ret.FontSize = GetFontSize(txt, _w, _h * 0.25)
+            ret.Texts.Add(New Shape.Text(txt, x + MarginX, y + MarginY + __h, _w, _h))
         End If
-    End Sub
+        Return ret
+    End Function
 
 End Class

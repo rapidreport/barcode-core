@@ -1,4 +1,6 @@
-﻿Imports System.Drawing
+﻿Imports System.Buffers
+Imports System.Drawing
+Imports System.Reflection
 
 Public Class Codabar
     Inherits Barcode
@@ -101,25 +103,20 @@ Public Class Codabar
         l.Add(CODE_PATTERNS(p, 6))
     End Sub
 
-    Public Sub Render(ByVal g As Graphics,
-                  ByVal x As Single, ByVal y As Single, ByVal w As Single, ByVal h As Single,
-                  ByVal data As String)
-        Me.Render(g, New RectangleF(x, y, w, h), data)
-    End Sub
-
-    Public Sub Render(ByVal g As Graphics, ByVal r As RectangleF, ByVal data As String)
+    Public Overrides Function CreateShape(x As Single, y As Single, w As Single, h As Single, data As String) As Shape
         If data Is Nothing OrElse data.Length = 0 Then
-            Exit Sub
+            Return Nothing
         End If
-        Dim w As Single = r.Width - Me.MarginX * 2
-        Dim h As Single = r.Height - Me.MarginY * 2
-        Dim _h As Single = h
+        Dim _w As Single = w - Me.MarginX * 2
+        Dim _h As Single = h - Me.MarginY * 2
+        Dim __h As Single = _h
         If Me.WithText Then
-            _h *= 0.7F
+            __h *= 0.7F
         End If
-        If w <= 0 Or h <= 0 Then
-            Exit Sub
+        If _w <= 0 Or _h <= 0 Then
+            Return Nothing
         End If
+        Dim ret As New Shape()
         Dim ps As List(Of Integer) = Me.GetCodePoints(data)
         Dim txt As String = data
         If Me.GenerateCheckSum Then
@@ -139,24 +136,26 @@ Public Class Codabar
             For Each c As Integer In cs
                 l += c + 1
             Next
-            mw = w / l
+            mw = _w / l
         End With
-        Dim draw As Boolean = True
-        Dim x As Single = MarginX
-        For i As Integer = 0 To cs.Length - 1
-            Dim dw As Single = (cs(i) + 1) * mw
-            If draw Then
-                g.FillRectangle(Brushes.Black, New RectangleF(r.X + x, r.Y + MarginY, dw * BarWidth, _h))
-            End If
-            draw = Not draw
-            x += dw
-        Next
+        With Nothing
+            Dim draw As Boolean = True
+            Dim _x As Single = x + MarginX
+            Dim _y As Single = y + MarginY
+            For i As Integer = 0 To cs.Length - 1
+                Dim dw As Single = (cs(i) + 1) * mw
+                If draw Then
+                    ret.Bars.Add(New Shape.Bar(_x, _y, dw * BarWidth, __h))
+                End If
+                draw = Not draw
+                _x += dw
+            Next
+        End With
         If Me.WithText Then
-            Dim f As Font = GetFont(GetFontSize(g, txt, w, h))
-            Dim format As StringFormat = New StringFormat()
-            format.Alignment = StringAlignment.Center
-            g.DrawString(txt, f, Brushes.Black, r.X + w / 2 + MarginX, r.Y + _h + MarginY, format)
+            ret.FontSize = GetFontSize(txt, _w, _h * 0.25)
+            ret.Texts.Add(New Shape.Text(txt, x + MarginX, y + MarginY + __h, _w, _h))
         End If
-    End Sub
+        Return ret
+    End Function
 
 End Class

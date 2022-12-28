@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\barcode.gdi\barcode.gdi.vbproj" />
+    <ProjectReference Include="..\barcode\barcode.vbproj" />
   </ItemGroup>
 
 </Project>
