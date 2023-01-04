@@ -118,16 +118,16 @@ Public Class Codabar
         End If
         Dim ret As New Shape()
         Dim ps As List(Of Integer) = Me.GetCodePoints(data)
-        Dim txt As String = data
+        Dim text As String = data
         If Me.GenerateCheckSum Then
             Dim cd As Integer = Me.CalcCheckDigit(ps)
             Me.AddCheckDigit(ps, cd)
             If Me.WithCheckSumText Then
-                txt = Me.AddCheckDigit(txt, cd)
+                text = Me.AddCheckDigit(text, cd)
             End If
         End If
         If Not Me.WithStartStopText Then
-            txt = Me.TrimStartStopText(txt)
+            text = Me.TrimStartStopText(text)
         End If
         Dim cs As Byte() = Me.Encode(ps)
         Dim mw As Single
@@ -152,8 +152,8 @@ Public Class Codabar
             Next
         End With
         If Me.WithText Then
-            ret.FontSize = GetFontSize(txt, _w, _h * 0.25)
-            ret.Texts.Add(New Shape.Text(txt, x + MarginX, y + MarginY + __h, _w, _h))
+            ret.FontSize = GetFontSize(text, _w, _h * 0.25)
+            ret.Texts.Add(New Shape.Text(text, x + MarginX, y + MarginY + __h, _w, _h))
         End If
         Return ret
     End Function

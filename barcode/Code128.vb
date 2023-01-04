@@ -284,6 +284,7 @@ Public Class Code128
             Return Nothing
         End If
         Me.Validate(data)
+        Dim text As String = data
         Dim ret As New Shape()
         With Nothing
             Dim cps = GetCodePoints(data)
@@ -301,8 +302,8 @@ Public Class Code128
             Next
         End With
         If Me.WithText Then
-            ret.FontSize = GetFontSize(data, _w, _h * 0.25)
-            ret.Texts.Add(New Shape.Text(data, x + MarginX, y + MarginY + __h, _w, _h))
+            ret.FontSize = GetFontSize(text, _w, _h * 0.25)
+            ret.Texts.Add(New Shape.Text(text, x + MarginX, y + MarginY + __h, _w, _h))
         End If
         Return ret
     End Function

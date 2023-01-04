@@ -106,7 +106,6 @@ Public Class Gs1_128
             Next
         End With
         If Me.WithText Then
-
             If Me.ConveniFormat Then
                 Dim t As String = Me.ConveniDisplayFormat(_data)
                 Dim t1 As String = t.Substring(0, 33)

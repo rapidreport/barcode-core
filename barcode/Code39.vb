@@ -123,7 +123,7 @@ Public Class Code39
         End If
         Dim ret As New Shape
         Dim ps As New List(Of Integer)
-        Dim txt As String = data
+        Dim text As String = data
         With Nothing
             Me.AddStartStopPoint(ps)
             Dim _ps As List(Of Integer) = Me.GetCodePoints(data)
@@ -132,11 +132,11 @@ Public Class Code39
                 Dim cd As Integer = Me.CalcCheckDigit(_ps)
                 ps.Add(cd)
                 If Me.WithCheckSumText Then
-                    txt &= CHARS(cd)
+                    text &= CHARS(cd)
                 End If
             End If
             Me.AddStartStopPoint(ps)
-            txt = Me.AddStartStopText(txt)
+            text = Me.AddStartStopText(text)
         End With
         With Nothing
             Dim cs As Byte() = Me.Encode(ps)
@@ -154,8 +154,8 @@ Public Class Code39
             Next
         End With
         If Me.WithText Then
-            ret.FontSize = GetFontSize(txt, _w, _h * 0.25)
-            ret.Texts.Add(New Shape.Text(txt, x + MarginX, y + MarginY + __h, _w, _h))
+            ret.FontSize = GetFontSize(text, _w, _h * 0.25)
+            ret.Texts.Add(New Shape.Text(text, x + MarginX, y + MarginY + __h, _w, _h))
         End If
         Return ret
     End Function

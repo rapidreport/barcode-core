@@ -92,11 +92,11 @@ Public Class Itf
         End If
         Dim ret As New Shape
         Dim _data As String = RegularizeData(data)
-        Dim txt As String = _data
+        Dim text As String = _data
         If Me.GenerateCheckSum Then
             _data &= Me.CalcCheckDigit(_data)
             If Me.WithCheckSumText Then
-                txt = _data
+                text = _data
             End If
         End If
         With Nothing
@@ -115,8 +115,8 @@ Public Class Itf
             Next
         End With
         If Me.WithText Then
-            ret.FontSize = GetFontSize(txt, _w, _h * 0.25)
-            ret.Texts.Add(New Shape.Text(txt, x + MarginX, y + MarginY + __h, _w, _h))
+            ret.FontSize = GetFontSize(text, _w, _h * 0.25)
+            ret.Texts.Add(New Shape.Text(text, x + MarginX, y + MarginY + __h, _w, _h))
         End If
         Return ret
     End Function
