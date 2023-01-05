@@ -18,7 +18,7 @@ Public Class Ean13
        {0, 1, 1, 0, 1, 0}}
 
     Private Shared GUARDS() As Integer = {0, 2, 28, 30, 56, 58}
-    Private Shared CHARPOS() As Single = {4, 14, 21, 28, 35, 42, 49, 61, 68, 75, 81, 88, 95}
+    Private Shared CHARPOS() As Single = {3, 14, 21, 28, 35, 42, 49, 61, 68, 75, 81, 88, 95}
 
     Public Function Encode(ByVal data As List(Of Byte)) As Byte()
         Dim cs As New List(Of Byte)
@@ -53,16 +53,14 @@ Public Class Ean13
         If data Is Nothing OrElse data.Length = 0 Then
             Return Nothing
         End If
-        Dim _w As Single = w - Me.MarginX * 2
-        Dim _h As Single = h - Me.MarginY * 2
-        Dim __h1 As Single = _h
-        Dim __h2 As Single = _h
-        If Me.WithText Then
-            __h1 *= 0.7F
-            __h2 *= 0.8F
-        End If
-        If _w <= 0 Or _h <= 0 Then
+        If w <= 0 Or h <= 0 Then
             Return Nothing
+        End If
+        Dim _h1 As Single = h
+        Dim _h2 As Single = h
+        If Me.WithText Then
+            _h1 *= 0.7F
+            _h2 *= 0.8F
         End If
         Dim ret As New Shape()
         Dim _data As List(Of Byte) = Me.PreprocessData(data)
@@ -71,27 +69,27 @@ Public Class Ean13
             Dim cs() As Byte = Me.Encode(_data)
             Dim _x As Single
             If Me.WithText Then
-                mw = _w / (12 * 7 + 18)
-                _x = x + MarginX + mw * 7
+                mw = w / (12 * 7 + 18)
+                _x = x + mw * 7
             Else
-                mw = _w / (12 * 7 + 11)
-                _x = x + MarginX
+                mw = w / (12 * 7 + 11)
+                _x = x
             End If
-            Dim _y As Single = y + MarginY
+            Dim _y As Single = y
             Dim draw As Boolean = True
             For i As Integer = 0 To cs.Length - 1
                 Dim dw As Single = cs(i) * mw
                 If draw Then
-                    ret.Bars.Add(New Shape.Bar(_x, _y, dw * BarWidth, IIf(GUARDS.Contains(i), __h2, __h1)))
+                    ret.Bars.Add(New Shape.Bar(_x, _y, dw * BarWidth, IIf(GUARDS.Contains(i), _h2, _h1)))
                 End If
                 draw = Not draw
                 _x += dw
             Next
         End With
         If Me.WithText Then
-            ret.FontSize = GetFontSize("0000000000000", _w, _h * 0.25)
+            ret.FontSize = GetFontSize("0000000000000000", w, h * 0.25)
             For i As Integer = 0 To 12
-                ret.Texts.Add(New Shape.Text(_data(i), x + MarginX + CHARPOS(i) * mw - ret.FontSize / 2, y + MarginY + __h1))
+                ret.Texts.Add(New Shape.Text(_data(i), x + CHARPOS(i) * mw - ret.FontSize / 2, y + _h1))
             Next
         End If
         Return ret

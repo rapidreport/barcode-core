@@ -50,13 +50,10 @@ Public MustInherit Class Barcode
 
     Public Shared BarWidth As Single = 1.0F
 
-    Public MarginX As Single = 2.0F
-    Public MarginY As Single = 2.0F
-
     Public WithText As Boolean = True
 
     Public Function GetFontSize(text As String, w As Single, h As Single) As Single
-        Return Math.Max(Math.Min((w / (text.Length + 0.5)) * 2, h), h * 0.2)
+        Return Math.Max(Math.Min((w / (text.Length + 0.5)) * 2, h), h * 0.2) * 0.9
     End Function
 
     Public MustOverride Function CreateShape(x As Single, y As Single, w As Single, h As Single, data As String) As Shape

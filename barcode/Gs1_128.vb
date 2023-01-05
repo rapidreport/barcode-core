@@ -71,18 +71,16 @@ Public Class Gs1_128
         If data Is Nothing OrElse data.Length = 0 Then
             Return Nothing
         End If
-        Dim _w As Single = w - Me.MarginX * 2
-        Dim _h As Single = h - Me.MarginY * 2
-        Dim __h As Single = _h
+        If w <= 0 Or h <= 0 Then
+            Return Nothing
+        End If
+        Dim _h As Single = h
         If Me.WithText Then
             If Me.ConveniFormat Then
-                __h *= 0.5F
+                _h *= 0.5F
             Else
-                __h *= 0.7F
+                _h *= 0.7F
             End If
-        End If
-        If _w <= 0 Or _h <= 0 Then
-            Return Nothing
         End If
         Dim ret As New Shape
         Dim _data As String = data
@@ -94,12 +92,11 @@ Public Class Gs1_128
             Dim cps = GetCodePoints(Me.TrimData(_data), ECodeType.C)
             Dim mw As Single = w / ((cps.Count + 1) * 11 + 13)
             Dim draw As Boolean = True
-            Dim _x As Single = x + MarginX
-            Dim _y As Single = y + MarginY
+            Dim _x As Single = x
             For Each c As Byte In Me.Encode(cps)
                 Dim dw As Single = c * mw
                 If draw Then
-                    ret.Bars.Add(New Shape.Bar(_x, _y, dw * BarWidth, __h))
+                    ret.Bars.Add(New Shape.Bar(_x, y, dw * BarWidth, _h))
                 End If
                 draw = Not draw
                 _x += dw
@@ -110,13 +107,13 @@ Public Class Gs1_128
                 Dim t As String = Me.ConveniDisplayFormat(_data)
                 Dim t1 As String = t.Substring(0, 33)
                 Dim t2 As String = t.Substring(33)
-                ret.FontSize = GetFontSize(t1, w, h * 0.25)
-                ret.Texts.Add(New Shape.Text(t1, x + MarginX, y + MarginY + __h))
-                ret.Texts.Add(New Shape.Text(t2, x + MarginX, y + MarginY + __h + ret.FontSize))
+                ret.FontSize = GetFontSize(t1, w, h * 0.3)
+                ret.Texts.Add(New Shape.Text(t1, x, y + _h))
+                ret.Texts.Add(New Shape.Text(t2, x, y + _h + ret.FontSize))
             Else
                 Dim t As String = Me.DisplayFormat(_data)
-                ret.FontSize = GetFontSize(t, w, h * 0.25)
-                ret.Texts.Add(New Shape.Text(t, x + MarginX, y + MarginY + __h, _w, _h))
+                ret.FontSize = GetFontSize(t, w, h * 0.3)
+                ret.Texts.Add(New Shape.Text(t, x, y + _h, w, _h))
             End If
         End If
         Return ret

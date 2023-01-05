@@ -274,36 +274,33 @@ Public Class Code128
         If data Is Nothing OrElse data.Length = 0 Then
             Return Nothing
         End If
-        Dim _w As Single = w - Me.MarginX * 2
-        Dim _h As Single = h - Me.MarginY * 2
-        Dim __h As Single = _h
-        If (Me.WithText) Then
-            __h *= 0.7F
-        End If
-        If _w <= 0 Or _h <= 0 Then
+        If w <= 0 Or h <= 0 Then
             Return Nothing
         End If
         Me.Validate(data)
+        Dim _h As Single = h
+        If Me.WithText Then
+            _h *= 0.7F
+        End If
         Dim text As String = data
         Dim ret As New Shape()
         With Nothing
             Dim cps = GetCodePoints(data)
             Dim mw As Single = w / ((cps.Count + 1) * 11 + 13)
             Dim draw As Boolean = True
-            Dim _x As Single = x + MarginX
-            Dim _y As Single = y + MarginY
+            Dim _x As Single = x
             For Each c As Byte In Me.Encode(cps)
                 Dim dw As Single = c * mw
                 If draw Then
-                    ret.Bars.Add(New Shape.Bar(_x, _y, dw * BarWidth, __h))
+                    ret.Bars.Add(New Shape.Bar(_x, y, dw * BarWidth, _h))
                 End If
                 draw = Not draw
                 _x += dw
             Next
         End With
         If Me.WithText Then
-            ret.FontSize = GetFontSize(text, _w, _h * 0.25)
-            ret.Texts.Add(New Shape.Text(text, x + MarginX, y + MarginY + __h, _w, _h))
+            ret.FontSize = GetFontSize(text, w, h * 0.25)
+            ret.Texts.Add(New Shape.Text(text, x, y + _h, w, h))
         End If
         Return ret
     End Function

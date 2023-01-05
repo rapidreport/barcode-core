@@ -3,12 +3,12 @@
   <PropertyGroup>
     <RootNamespace>jp.co.systembase.barcode</RootNamespace>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWindowsForms>false</UseWindowsForms>
     <AssemblyName>systembase.barcode</AssemblyName>
     <PackageId>jp.co.systembase.barcode</PackageId>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>barcode.snk</AssemblyOriginatorKeyFile>
-    <Version>1.8</Version>
+    <Version>1.8.0</Version>
     <AssemblyVersion>1.8.0.0</AssemblyVersion>
     <FileVersion>1.8.0.0</FileVersion>
     <Authors>systembase</Authors>

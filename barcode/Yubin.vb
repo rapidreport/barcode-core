@@ -129,14 +129,13 @@
         If data Is Nothing OrElse data.Length = 0 Then
             Return Nothing
         End If
-        Dim _w As Single = w - Me.MarginX * 2
-        If _w <= 0 Then
+        If w <= 0 Or h <= 0 Then
             Return Nothing
         End If
         Dim ret As New Shape
         Dim codes As List(Of Byte) = Me.Encode(data)
         Dim uw As Single = w / (codes.Count * 2)
-        Dim _x As Single = x + Me.MarginX
+        Dim _x As Single = x
         Dim _y As Single = y + h / 2
         For Each c As Byte In codes
             Dim by As Single = 0

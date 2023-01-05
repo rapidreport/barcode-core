@@ -80,15 +80,13 @@ Public Class Itf
         If data Is Nothing OrElse data.Length = 0 Then
             Return Nothing
         End If
-        Validate(data)
-        Dim _w As Single = w - Me.MarginX * 2
-        Dim _h As Single = h - Me.MarginY * 2
-        Dim __h As Single = _h
-        If Me.WithText Then
-            __h *= 0.7F
-        End If
-        If _w <= 0 Or _h <= 0 Then
+        If w <= 0 Or h <= 0 Then
             Return Nothing
+        End If
+        Validate(data)
+        Dim _h As Single = h
+        If Me.WithText Then
+            _h *= 0.7F
         End If
         Dim ret As New Shape
         Dim _data As String = RegularizeData(data)
@@ -102,21 +100,21 @@ Public Class Itf
         With Nothing
             Dim cs As List(Of Byte) = Encode(_data)
             Dim uw As Single = w / (_data.Length * 7 + 8)
-            Dim _x As Single = x + MarginX
-            Dim _y As Single = y + MarginY
+            Dim _x As Single = x
+            Dim _y As Single = y
             Dim draw As Boolean = True
             For Each c As Byte In cs
                 Dim bw As Single = uw * (c + 1)
                 If draw Then
-                    ret.Bars.Add(New Shape.Bar(_x, _y, bw * BarWidth, __h))
+                    ret.Bars.Add(New Shape.Bar(_x, _y, bw * BarWidth, _h))
                 End If
                 draw = Not draw
                 _x += bw
             Next
         End With
         If Me.WithText Then
-            ret.FontSize = GetFontSize(text, _w, _h * 0.25)
-            ret.Texts.Add(New Shape.Text(text, x + MarginX, y + MarginY + __h, _w, _h))
+            ret.FontSize = GetFontSize(text, w, h * 0.25)
+            ret.Texts.Add(New Shape.Text(text, x, y + _h, w, h))
         End If
         Return ret
     End Function
